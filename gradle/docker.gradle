@@ -1,0 +1,50 @@
+String buildTag = System.getenv()['CI_BUILD_TAG']
+
+// determine dockertag
+if (buildTag != null && !buildTag.isEmpty()) {
+    project.ext.dockerTag = buildTag
+} else {
+    project.ext.dockerTag = System.getenv()['CI_BUILD_ID'] ?: "local"
+}
+
+String getDockerImageName() {
+    if(!project.ext.dockerRegistry) {
+        return "${project.ext.dockerApplicationName}:${project.ext.dockerTag}"
+    } else {
+        return "${project.ext.dockerRegistry}/${project.ext.dockerApplicationName}:${project.ext.dockerTag}"
+    }
+}
+
+task getDockerImageName() {
+    println getDockerImageName()
+}
+
+task buildDockerImage(type:Exec) {
+    doFirst {
+        println ">> Creating image: ${dockerImageName}"
+        copy {
+          from 'build/libs'
+          from 'src/main/resources/docker'
+          into 'build/docker'
+          rename { String fileName ->
+              fileName.replace("-$version", "")
+          }
+        }
+    }
+    group = 'docker'
+    description = 'Build a docker image'
+    commandLine 'docker', 'build', '-f', 'build/docker/Dockerfile', '-t', "${dockerImageName}", 'build/docker'
+}
+
+task pushDockerImage(type: Exec) {
+    group = 'docker'
+    description = 'Push a docker image'
+    commandLine 'docker', 'push', "${dockerImageName}"
+    doFirst {
+        println ">> Checking dockerRepository"
+        if (!project.ext.dockerRegistry) {
+            throw new GradleException("Unable to push image, please provide correct 'dockerRepository'")
+        }
+        println ">> Pushing image: ${dockerImageName}"
+    }
+}

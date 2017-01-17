@@ -1,0 +1,7 @@
+.idea/**
+.gradle/**
+build/**
+atlassian-ide-plugin.xml
+*.iml
+classes/**
+local.properties

@@ -1,0 +1,9 @@
+#!/bin/bash
+CONTAINER_NAME=$1
+CONTAINER_PORT=$2
+echo until nc -z localhost $CONTAINER_PORT
+until nc -z localhost $CONTAINER_PORT
+do
+    echo "waiting for container on port ..."
+    sleep 0.5
+done

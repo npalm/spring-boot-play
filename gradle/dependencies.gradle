@@ -1,0 +1,28 @@
+ext { libraries = [:] }
+
+libraries.springboot = [
+        'org.springframework.boot:spring-boot-starter-web',
+        'org.springframework.boot:spring-boot-starter-actuator',
+        'org.springframework.boot:spring-boot-starter-data-jpa'
+]
+
+libraries.test = [
+        'junit:junit:4.12',
+        'org.mockito:mockito-core:1.+',
+        'org.springframework.boot:spring-boot-starter-test',
+        'org.springframework.restdocs:spring-restdocs-mockmvc',
+        'com.jayway.restassured:rest-assured:2.9.0',
+        'com.jayway.jsonpath:json-path:2.2.0'
+]
+
+libraries.tools = [
+        'com.google.guava:guava:19.0',
+        'org.projectlombok:lombok:1.16.8',
+        'commons-io:commons-io:2.5'
+]
+
+libraries.database = [
+        'com.h2database:h2',
+        'org.postgresql:postgresql:9.4.1212',
+        'org.flywaydb:flyway-core:4.0.3'
+]

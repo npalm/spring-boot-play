@@ -1,0 +1,67 @@
+buildscript {
+    ext {
+        springBootVersion = '1.4.2.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.1.1'
+    }
+}
+
+plugins {
+    id 'com.github.jk1.dependency-license-report' version '0.3.4'
+    id 'org.sonarqube' version '2.0.1'
+}
+
+project.ext.dockerApplicationName = "forest/play-service"
+project.ext.dockerRegistry = System.env.DOCKER_REGISTRY
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+apply from: "${rootDir}/gradle/dependencies.gradle"
+apply from: "${rootDir}/gradle/docker.gradle"
+apply from: "${rootDir}/gradle/ittest.gradle"
+
+def servicePort = 8080
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+    compile libraries.springboot,
+            libraries.tools,
+            libraries.database
+
+    testCompile libraries.test
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.RELEASE"
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.3'
+}
+
+tasks.withType(org.springframework.boot.gradle.run.BootRunTask) {
+    bootRun.systemProperties = System.properties
+}
+
+licenseReport {
+    // See https://github.com/jk1/Gradle-License-Report for more info
+    excludeGroups = ['com.philips.digilabs.ppf.micro']
+    renderer = new com.github.jk1.license.render.CsvReportRenderer()
+}
