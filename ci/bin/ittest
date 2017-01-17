@@ -11,7 +11,7 @@ IMAGE="$(./gradlew getDockerImageName --quiet)"
 docker run -d --name it-test -e PROFILE=docker -e INFO_version="IT-TEST" -p 8080:8080 ${IMAGE}
 
 # wait till service is ready
-./ci/bin/wait it-test 8080
+./ci/bin/wait 8080
 
 # run it test
 ./gradlew integrationTest

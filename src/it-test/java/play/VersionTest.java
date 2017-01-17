@@ -11,7 +11,7 @@ public class VersionTest {
     private static final String SERVICE_URL = "http://localhost:8080/api";
 
     @Test
-    public void addGetDeleteNote() {
+    public void testVersion() {
 
         // Get
         given().

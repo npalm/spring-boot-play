@@ -1,9 +1,10 @@
 #!/bin/bash
-CONTAINER_NAME=$1
-CONTAINER_PORT=$2
-echo until nc -z localhost $CONTAINER_PORT
-until nc -z localhost $CONTAINER_PORT
+CONTAINER_PORT=$1
+
+#!/bin/sh
+while ! curl http://localhost:$CONTAINER_PORT/
 do
-    echo "waiting for container on port ..."
-    sleep 0.5
+  echo "$(date) - still trying"
+  sleep 0.5
 done
+echo "$(date) - connected successfully"
